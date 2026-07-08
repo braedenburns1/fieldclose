@@ -86,6 +86,7 @@ export default function Dashboard() {
           </Link>
         </div>
         <div className="section-title">recent proposals</div>
+        <Link href="/clients" style={{ fontSize: 13, color: 'var(--orange)', textDecoration: 'none', display: 'block', marginBottom: 12 }}>View all clients →</Link>
         {proposals.length === 0 && <p style={{ color: '#888', fontSize: 14 }}>No proposals yet. Start your first call above.</p>}
         {proposals.map(p => (
           <Link key={p.id} href={`/proposal/${p.id}`} style={{ textDecoration: 'none' }}>
