@@ -11,6 +11,7 @@ export default function Admin() {
   const [systems, setSystems] = useState<any[]>([])
   const [addons, setAddons] = useState<any[]>([])
   const [saving, setSaving] = useState(false)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
   const [editingSys, setEditingSys] = useState<any>(null)
   const [editingAddon, setEditingAddon] = useState<any>(null)
   const [newAddon, setNewAddon] = useState({ name: '', description: '', price: '' })
@@ -64,9 +65,44 @@ export default function Admin() {
 
   async function saveProfile() {
     setSaving(true)
-    await supabase.from('profiles').update({ company_name: profile.company_name, owner_name: profile.owner_name, phone: profile.phone }).eq('id', user.id)
+    await supabase.from('profiles').update({ company_name: profile.company_name, owner_name: profile.owner_name, phone: profile.phone, brand_color: profile.brand_color }).eq('id', user.id)
     setSaving(false)
     alert('Saved!')
+  }
+
+  function handleLogoUpload(e: any) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingLogo(true)
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const img = new Image()
+      img.onload = async () => {
+        const maxDim = 300
+        let { width, height } = img
+        if (width > height) {
+          if (width > maxDim) { height = height * (maxDim / width); width = maxDim }
+        } else {
+          if (height > maxDim) { width = width * (maxDim / height); height = maxDim }
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx?.drawImage(img, 0, 0, width, height)
+        const dataUrl = canvas.toDataURL('image/png', 0.9)
+        await supabase.from('profiles').update({ logo_data: dataUrl }).eq('id', user.id)
+        setProfile((p: any) => ({ ...p, logo_data: dataUrl }))
+        setUploadingLogo(false)
+      }
+      img.src = event.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  }
+
+  async function removeLogo() {
+    await supabase.from('profiles').update({ logo_data: null }).eq('id', user.id)
+    setProfile((p: any) => ({ ...p, logo_data: null }))
   }
 
   return (
@@ -153,6 +189,32 @@ export default function Admin() {
           <div style={{ marginBottom: 12 }}><label className="label">Company name</label><input className="input" value={profile.company_name || ''} onChange={e => setProfile((p: any) => ({ ...p, company_name: e.target.value }))} /></div>
           <div style={{ marginBottom: 12 }}><label className="label">Owner name</label><input className="input" value={profile.owner_name || ''} onChange={e => setProfile((p: any) => ({ ...p, owner_name: e.target.value }))} /></div>
           <div style={{ marginBottom: 20 }}><label className="label">Phone</label><input className="input" value={profile.phone || ''} onChange={e => setProfile((p: any) => ({ ...p, phone: e.target.value }))} placeholder="(214) 555-0000" /></div>
+
+          <div className="section-title">branding</div>
+          <div className="card" style={{ marginBottom: 20 }}>
+            <label className="label">Logo</label>
+            {profile.logo_data ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 6 }}>
+                <img src={profile.logo_data} alt="Logo" style={{ maxHeight: 60, maxWidth: 140, objectFit: 'contain', borderRadius: 6, border: '1px solid #eee' }} />
+                <button onClick={removeLogo} style={{ fontSize: 13, color: '#c0392b', background: 'none', border: 'none', cursor: 'pointer' }}>Remove</button>
+              </div>
+            ) : (
+              <div style={{ marginTop: 6 }}>
+                <input type="file" accept="image/*" onChange={handleLogoUpload} disabled={uploadingLogo} />
+                {uploadingLogo && <p style={{ fontSize: 12, color: '#888', marginTop: 6 }}>Uploading...</p>}
+              </div>
+            )}
+            <p style={{ fontSize: 12, color: '#aaa', marginTop: 8 }}>Shows at the top of proposals sent to customers.</p>
+          </div>
+          <div className="card" style={{ marginBottom: 20 }}>
+            <label className="label">Brand color</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6 }}>
+              <input type="color" value={profile.brand_color || '#D85A30'} onChange={e => setProfile((p: any) => ({ ...p, brand_color: e.target.value }))} style={{ width: 48, height: 40, border: 'none', borderRadius: 8, cursor: 'pointer' }} />
+              <span style={{ fontSize: 13, color: '#888' }}>{profile.brand_color || '#D85A30'}</span>
+            </div>
+            <p style={{ fontSize: 12, color: '#aaa', marginTop: 8 }}>Used for prices and buttons on your proposals.</p>
+          </div>
+
           <button className="btn-primary" disabled={saving} onClick={saveProfile}>{saving ? 'Saving...' : 'Save company info'}</button>
         </>}
       </div>
