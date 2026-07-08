@@ -5,14 +5,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end()
-  const { email } = req.body
+  const { email, plan } = req.body
+
+  const isLifetime = plan === 'lifetime'
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
-    mode: 'subscription',
+    mode: isLifetime ? 'payment' : 'subscription',
     customer_email: email,
     line_items: [{
-      price: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+      price: isLifetime
+        ? process.env.NEXT_PUBLIC_STRIPE_LIFETIME_PRICE_ID
+        : process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
       quantity: 1,
     }],
     success_url: `${req.headers.origin}/dashboard?subscribed=true`,
