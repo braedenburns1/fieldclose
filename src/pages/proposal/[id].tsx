@@ -7,6 +7,7 @@ export default function ProposalDetail() {
   const router = useRouter()
   const { id } = router.query
   const [proposal, setProposal] = useState<any>(null)
+  const [profile, setProfile] = useState<any>(null)
   const [system, setSystem] = useState<any>(null)
   const [addons, setAddons] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -21,6 +22,10 @@ export default function ProposalDetail() {
       const { data: p } = await supabase.from('proposals').select('*').eq('id', id).single()
       if (!p) { router.push('/dashboard'); return }
       setProposal(p)
+      if (p.profile_id) {
+        const { data: prof } = await supabase.from('profiles').select('company_name, logo_data, brand_color').eq('id', p.profile_id).single()
+        setProfile(prof)
+      }
       if (p.selected_system_id) {
         const { data: sys } = await supabase.from('systems').select('*').eq('id', p.selected_system_id).single()
         setSystem(sys)
@@ -77,8 +82,10 @@ export default function ProposalDetail() {
   if (loading) return <div className="page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}><p style={{ color: '#888' }}>Loading...</p></div>
   if (!proposal) return null
 
+  const brandColor = profile?.brand_color || '#D85A30'
+
   return (
-    <div className="page">
+    <div className="page" style={{ '--orange': brandColor } as any}>
       <div className="topbar">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div><h1>{proposal.customer_name}</h1><p>{proposal.address}</p></div>
@@ -86,6 +93,12 @@ export default function ProposalDetail() {
         </div>
       </div>
       <div className="content">
+        {profile?.logo_data && (
+          <div style={{ textAlign: 'center', marginBottom: 20 }}>
+            <img src={profile.logo_data} alt={profile.company_name || 'Company logo'} style={{ maxHeight: 70, maxWidth: 220, objectFit: 'contain' }} />
+          </div>
+        )}
+
         {proposal.photo_data && <>
           <div className="section-title">what we found</div>
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
