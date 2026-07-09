@@ -7,40 +7,42 @@
   --orange-light: #FAECE7;
   --orange-mid: #F0997B;
   --orange-dark: #993C1D;
+  --ink: #1A2332;
+  --ink-light: #2C3B52;
 }
 
 * { box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7f7f4; }
 
-.btn-primary { background: var(--orange); color: white; padding: 12px 20px; border-radius: 10px; border: none; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.15s; }
+.btn-primary { background: var(--orange); color: white; padding: 13px 20px; border-radius: 10px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.15s; }
 .btn-primary:hover { background: var(--orange-dark); }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-secondary { background: #f5f5f0; color: #333; padding: 12px 20px; border-radius: 10px; border: 1px solid #ddd; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.15s; margin-top: 8px; }
-.btn-secondary:hover { background: #eee; }
-.card { background: white; border-radius: 12px; border: 1px solid #eee; padding: 16px; margin-bottom: 12px; }
-.input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: white; color: #111; font-family: inherit; }
-.input:focus { outline: none; border-color: var(--orange); }
+.btn-secondary { background: white; color: #333; padding: 13px 20px; border-radius: 10px; border: 1px solid #e2e2df; font-size: 15px; font-weight: 500; cursor: pointer; width: 100%; transition: background 0.15s; margin-top: 8px; }
+.btn-secondary:hover { background: #f5f5f0; }
+.card { background: white; border-radius: 14px; border: 1px solid #f0f0ed; box-shadow: 0 1px 3px rgba(20,20,10,0.04), 0 1px 2px rgba(20,20,10,0.03); padding: 16px; margin-bottom: 12px; }
+.input { width: 100%; padding: 11px 14px; border: 1px solid #e2e2df; border-radius: 8px; font-size: 14px; background: white; color: #111; font-family: inherit; }
+.input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); }
 .label { font-size: 12px; color: #888; margin-bottom: 5px; display: block; }
-.section-title { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
-.topbar { background: var(--orange); padding: 16px 20px; color: white; position: sticky; top: 0; z-index: 10; }
-.topbar h1 { font-size: 18px; font-weight: 600; }
-.topbar p { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+.section-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+.topbar { background: var(--ink); padding: 18px 20px; color: white; position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
+.topbar p { font-size: 12px; opacity: 0.65; margin-top: 2px; }
 .step-bar { display: flex; gap: 5px; margin-bottom: 20px; }
 .step-dot { height: 4px; flex: 1; border-radius: 2px; background: #eee; }
 .step-dot.done { background: var(--orange); }
 .step-dot.active { background: var(--orange-mid); }
-.page { max-width: 440px; margin: 0 auto; min-height: 100vh; background: white; }
+.page { max-width: 440px; margin: 0 auto; min-height: 100vh; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.04); }
 .content { padding: 20px; }
 .footer-bar { padding: 16px 20px; border-top: 1px solid #eee; background: white; position: sticky; bottom: 0; }
-.tier-card { border: 1px solid #eee; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.15s; position: relative; }
+.tier-card { border: 1px solid #f0f0ed; border-radius: 14px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: all 0.15s; position: relative; box-shadow: 0 1px 3px rgba(20,20,10,0.04); }
 .tier-card:hover { border-color: var(--orange-mid); background: var(--orange-light); }
 .tier-card.selected { border: 2px solid var(--orange); }
-.tier-badge { position: absolute; top: -1px; right: 14px; background: var(--orange); color: white; font-size: 11px; padding: 3px 10px; border-radius: 0 0 8px 8px; }
+.tier-badge { position: absolute; top: -1px; right: 14px; background: var(--orange); color: white; font-size: 11px; padding: 3px 10px; border-radius: 0 0 8px 8px; font-weight: 600; }
 .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.option-card { border: 1px solid #eee; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+.option-card { border: 1px solid #f0f0ed; border-radius: 12px; padding: 16px 14px; cursor: pointer; transition: all 0.15s; box-shadow: 0 1px 3px rgba(20,20,10,0.04); }
 .option-card:hover { border-color: var(--orange-mid); background: var(--orange-light); }
 .option-card.selected { border: 2px solid var(--orange); background: var(--orange-light); }
-.badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
+.badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
 .badge-pending { background: #fff3cd; color: #856404; }
 .badge-sent { background: #cfe2ff; color: #084298; }
 .badge-signed { background: #d1e7dd; color: #0a3622; }
